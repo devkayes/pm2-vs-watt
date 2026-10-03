@@ -3,21 +3,35 @@
 #   runners x endpoints x connection modes x repeats
 # alternating pm2/watt so neither always runs on a "warmer" machine.
 #
-#   TARGET=http://10.0.2.10:3000 APP_SSH=ec2-user@10.0.2.10 ./scripts/run-all.sh
+#   cp .env.example .env   # fill in APP_HOST, then:
+#   ./scripts/run-all.sh
 #
-# APP_SSH : if set, runners are switched automatically over SSH
-#           (repo must be at ~/pm2-vs-watt on the app instance).
-#           APP_SSH=local runs everything on this machine (pipeline check only:
-#           k6 and the app then share CPU, so the numbers are not meaningful).
-#           If not set, the script pauses and asks you to switch by hand.
-# PROM_URL : optional, e.g. http://10.0.3.10:9090 (the monitoring instance).
-#           If set, every measured k6 run is pushed to Prometheus live, tagged
-#           with runner/endpoint/conn/rep, for the Grafana "pm2 vs Watt" dashboard.
+# Settings come from .env; anything passed on the command line wins,
+# e.g. REPEATS=1 ./scripts/run-all.sh
+#
+# APP_HOST empty : everything runs on this machine (pipeline check only: k6
+#                  and the app then share CPU, so the numbers are not meaningful).
+# APP_HOST set   : runners are switched over SSH as APP_USER
+#                  (repo must be at ~/pm2-vs-watt on the app instance).
+# PROM_URL       : if set, every measured k6 run is pushed to Prometheus live, tagged
+#                  with runner/endpoint/conn/rep, for the Grafana "pm2 vs Watt" dashboard.
 set -euo pipefail
 export K6_NO_USAGE_REPORT=true
 cd "$(dirname "$0")/.."
 
-TARGET="${TARGET:?set TARGET, e.g. http://10.0.2.10:3000}"
+if [[ -f .env ]]; then
+  while IFS='=' read -r key value || [[ -n "$key" ]]; do
+    [[ "$key" =~ ^[A-Z_][A-Z0-9_]*$ && -z "${!key:-}" ]] && export "$key=$value"
+  done < .env
+fi
+
+if [[ -z "${APP_HOST:-}" ]]; then
+  TARGET="${TARGET:-http://localhost:3000}"
+  APP_SSH="${APP_SSH:-local}"
+else
+  TARGET="${TARGET:-http://$APP_HOST:3000}"
+  APP_SSH="${APP_SSH:-${APP_USER:-$USER}@$APP_HOST}"
+fi
 ENDPOINTS="${ENDPOINTS:-ping cpu io}"
 MODES="${MODES:-ka new}"           # ka = keep-alive, new = new connection per request
 REPEATS="${REPEATS:-3}"

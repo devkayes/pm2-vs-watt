@@ -6,7 +6,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../app"
 
-WORKERS="${WORKERS:-$(nproc)}"
+WORKERS="${WORKERS:-$(nproc 2>/dev/null || sysctl -n hw.ncpu)}"
 export WORKERS PLT_WORKERS="$WORKERS"
 
 stop_all() {

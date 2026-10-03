@@ -31,32 +31,37 @@ cd app
 npm run dev      # http://localhost:3000, restarts on file changes
 ```
 
-## Start one runner by hand
+## Config
 
-Run from the repo root:
+All settings live in one file:
 
 ```bash
-WORKERS=2 ./scripts/app.sh start pm2     # or: start watt
-curl localhost:3000/whoami
-./scripts/app.sh stop
+cp .env.example .env
 ```
+
+| Setting | Meaning |
+|---|---|
+| `APP_HOST` | IP of the app machine. Empty = everything on this machine. |
+| `APP_USER` | SSH user on the app machine |
+| `PROM_URL` | Prometheus address. Empty = no Grafana. |
+| `MODES`, `REPEATS`, `WARMUP`, `DURATION` | test settings |
 
 ## Run the test
 
-Everything on one machine, short version (about 5 minutes):
-
 ```bash
-TARGET=http://localhost:3000 APP_SSH=local WORKERS=2 \
-REPEATS=1 WARMUP=5s DURATION=20s \
-  ./scripts/run-all.sh
+docker compose --env-file .env -f monitoring/docker-compose.yml up -d   # Grafana, optional
+./scripts/run-all.sh
 ```
 
-This starts pm2, tests it, then does the same for Watt. Remove the second line for the full run (about 1h15m).
+This starts pm2, tests it, then does the same for Watt.
 
-To test an app on another machine, use its address and SSH login instead. The repo must be at `~/pm2-vs-watt` on that machine, already built.
+- Live dashboard: `http://localhost:3001/d/pm2-vs-watt` (admin / admin)
+- Report when it finishes: `results/<timestamp>/report.html`
+
+For a quick try, override any setting on the command line:
 
 ```bash
-TARGET=http://<app-ip>:3000 APP_SSH=<user>@<app-ip> ./scripts/run-all.sh
+REPEATS=1 WARMUP=5s DURATION=20s ./scripts/run-all.sh
 ```
 
-When it finishes, open `results/<timestamp>/report.html`.
+When `APP_HOST` is another machine, the repo must be at `~/pm2-vs-watt` there, already built, and reachable over SSH without a password.

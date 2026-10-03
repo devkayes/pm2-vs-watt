@@ -4,3 +4,4 @@ dist/
 results/*
 !results/.gitkeep
 *.log
+.env

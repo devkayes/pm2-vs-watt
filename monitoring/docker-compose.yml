@@ -1,5 +1,5 @@
-# Local (app on this machine):   docker compose up -d
-# Server (app on another one):   APP_HOST=10.0.2.10 docker compose up -d
+# From the repo root (APP_HOST comes from .env; empty = app on this machine):
+#   docker compose --env-file .env -f monitoring/docker-compose.yml up -d
 # Grafana: http://<monitoring-ip>:3001  (admin / admin)
 # The "pm2 vs Watt" dashboard is loaded automatically (Dashboards > Benchmarks).
 services:
