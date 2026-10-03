@@ -53,8 +53,8 @@ if [[ -n "${PROM_URL:-}" ]]; then
 fi
 
 on_app() {
-  if [[ "$APP_SSH" == "local" ]]; then bash -c "cd '$PWD' && $1"
-  else ssh "$APP_SSH" "cd ~/pm2-vs-watt && $1"; fi
+  if [[ "$APP_SSH" == "local" ]]; then bash -c "cd '$PWD'; $1"
+  else ssh "$APP_SSH" "cd ~/pm2-vs-watt; $1"; fi
 }
 
 switch_runner() {
