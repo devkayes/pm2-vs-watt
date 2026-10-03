@@ -16,7 +16,7 @@ A small load test: the same NestJS app run two ways.
 
 ## Setup
 
-You need Node.js 22.12 or newer and [k6](https://k6.io).
+You need Node.js 22.19 or newer and [k6](https://k6.io).
 
 ```bash
 cd app
