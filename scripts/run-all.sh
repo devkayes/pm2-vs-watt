@@ -4,7 +4,8 @@
 # alternating pm2/watt so neither always runs on a "warmer" machine.
 #
 #   cp .env.example .env   # fill in APP_HOST, then:
-#   ./scripts/run-all.sh
+#   ./scripts/run-all.sh          # full run, about 20 minutes
+#   ./scripts/run-all.sh quick    # pipeline check, about 2 minutes
 #
 # Settings come from .env; anything passed on the command line wins,
 # e.g. REPEATS=1 ./scripts/run-all.sh
@@ -18,6 +19,8 @@
 set -euo pipefail
 export K6_NO_USAGE_REPORT=true
 cd "$(dirname "$0")/.."
+
+if [[ "${1:-}" == "quick" ]]; then REPEATS=1 WARMUP=3s DURATION=7s; fi
 
 if [[ -f .env ]]; then
   while IFS='=' read -r key value || [[ -n "$key" ]]; do
@@ -34,10 +37,10 @@ else
 fi
 ENDPOINTS="${ENDPOINTS:-ping cpu io}"
 MODES="${MODES:-ka new}"           # ka = keep-alive, new = new connection per request
-REPEATS="${REPEATS:-3}"
+REPEATS="${REPEATS:-2}"
 VUS="${VUS:-100}"
-WARMUP="${WARMUP:-60s}"
-DURATION="${DURATION:-2m}"
+WARMUP="${WARMUP:-20s}"
+DURATION="${DURATION:-70s}"
 OUT="${OUT:-results/$(date +%Y%m%d-%H%M)}"
 mkdir -p "$OUT"
 RUN_ID="$(basename "$OUT")"

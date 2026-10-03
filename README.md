@@ -58,10 +58,10 @@ This starts pm2, tests it, then does the same for Watt.
 - Live dashboard: `http://localhost:3001/d/pm2-vs-watt` (admin / admin)
 - Report when it finishes: `results/<timestamp>/report.html`
 
-For a quick try, override any setting on the command line:
+The full run takes about 20 minutes. For a 2-minute check that everything is connected:
 
 ```bash
-REPEATS=1 WARMUP=5s DURATION=20s ./scripts/run-all.sh
+./scripts/run-all.sh quick
 ```
 
 When `APP_HOST` is another machine, the repo must be at `~/pm2-vs-watt` there, already built, and reachable over SSH without a password.
