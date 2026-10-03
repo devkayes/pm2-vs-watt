@@ -1,6 +1,3 @@
-// Fixed workloads so every request does exactly the same amount of work.
-// Tune CPU_ITEMS once on your instance so /cpu takes roughly 10-30 ms.
-
 export const CPU_ITEMS = Number(process.env.CPU_ITEMS ?? 5000);
 export const IO_DELAY_MS = Number(process.env.IO_DELAY_MS ?? 20);
 
@@ -22,6 +19,5 @@ export function cpuWork(): { items: number; checksum: number } {
 }
 
 export function ioWork(): Promise<void> {
-  // Simulates waiting on a database/network call without adding a real DB.
   return new Promise((resolve) => setTimeout(resolve, IO_DELAY_MS));
 }

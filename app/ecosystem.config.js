@@ -1,5 +1,3 @@
-// pm2 cluster mode: one primary process accepts connections and hands them
-// to WORKERS child processes (round-robin over IPC).
 const WORKERS = Number(process.env.WORKERS ?? require('node:os').availableParallelism());
 
 module.exports = {
