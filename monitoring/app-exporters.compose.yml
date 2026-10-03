@@ -1,0 +1,21 @@
+# Run on the APP instance. Tiny exporters, identical for both runners.
+#   docker compose -f monitoring/app-exporters.compose.yml up -d
+services:
+  node-exporter:
+    image: prom/node-exporter:latest
+    network_mode: host
+    pid: host
+    command: ['--path.rootfs=/host']
+    volumes: ['/:/host:ro,rslave']
+    restart: unless-stopped
+
+  process-exporter:
+    image: ncabatoff/process-exporter:latest
+    network_mode: host
+    pid: host
+    privileged: true
+    command: ['--procfs', '/host/proc', '--config.path', '/config/process-exporter.yml']
+    volumes:
+      - /proc:/host/proc:ro
+      - ./process-exporter.yml:/config/process-exporter.yml:ro
+    restart: unless-stopped

@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.pm2/
+results/*
+!results/.gitkeep
+*.log

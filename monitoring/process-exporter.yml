@@ -1,0 +1,11 @@
+# Groups processes so pm2's daemon (the connection hand-off "primary"),
+# pm2 workers and the Watt process show up as separate series in Grafana.
+# Regexes are anchored so shells or editors that merely mention these names
+# are not counted.
+process_names:
+  - name: "pm2-daemon"
+    cmdline: ['^PM2 v[0-9.]+: God Daemon']
+  - name: "pm2-worker"
+    cmdline: ['^node .*dist/main\.js']
+  - name: "watt"
+    cmdline: ['^node .*wattpm start']

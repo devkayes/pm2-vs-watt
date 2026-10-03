@@ -1,0 +1,13 @@
+# Replace 10.0.2.10 with your app instance's private IP.
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: node            # whole-machine CPU / memory
+    static_configs: [{ targets: ['10.0.2.10:9100'] }]
+
+  - job_name: process         # CPU / memory per process (pm2 daemon vs workers)
+    static_configs: [{ targets: ['10.0.2.10:9256'] }]
+
+  - job_name: watt            # Watt's own metrics (only up while Watt runs)
+    static_configs: [{ targets: ['10.0.2.10:9091'] }]

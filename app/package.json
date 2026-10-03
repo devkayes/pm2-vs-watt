@@ -1,0 +1,30 @@
+{
+  "name": "bench-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal NestJS app for comparing pm2 cluster mode vs Platformatic Watt",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js",
+    "start:pm2": "pm2 start ecosystem.config.js",
+    "stop:pm2": "pm2 delete bench",
+    "start:watt": "wattpm start",
+    "dev:watt": "wattpm dev"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.2.7",
+    "@nestjs/core": "^11.2.7",
+    "@nestjs/platform-express": "^11.2.7",
+    "@platformatic/nest": "^3.71.0",
+    "pm2": "^7.0.4",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "wattpm": "^3.71.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.24",
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3"
+  }
+}

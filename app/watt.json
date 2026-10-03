@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.platformatic.dev/@platformatic/nest/3.71.0.json",
+  "nest": {
+    "adapter": "express",
+    "appModule": {
+      "path": "app.module",
+      "name": "AppModule"
+    }
+  },
+  "application": {
+    "commands": {
+      "build": "npm run build"
+    }
+  },
+  "logger": {
+    "level": "warn"
+  },
+  "runtime": {
+    "workers": "{PLT_WORKERS}",
+    "server": {
+      "hostname": "0.0.0.0",
+      "port": 3000
+    },
+    "logger": {
+      "level": "warn"
+    },
+    "metrics": {
+      "enabled": true,
+      "hostname": "0.0.0.0",
+      "port": 9091,
+      "endpoint": "/metrics"
+    },
+    "reuseTcpPorts": true
+  }
+}
